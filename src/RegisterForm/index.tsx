@@ -3,6 +3,7 @@ import './index.css';
 
 type Inputs = {
   name: string;
+  nickname: string;
 };
 
 type Props = {
@@ -30,6 +31,15 @@ export const RegisterForm: React.FC<Props> = (props) => {
           {errors.name && (
             <p role="alert" className="error">
               {errors.name.message}
+            </p>
+          )}
+        </div>
+        <div className="input-unit">
+          <label htmlFor="register-form--nickname">ニックネーム</label>
+          <input id="register-form--nickname" {...register('nickname')} />
+          {errors.nickname && (
+            <p role="alert" className="error">
+              {errors.nickname.message}
             </p>
           )}
         </div>
