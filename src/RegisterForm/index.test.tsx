@@ -19,6 +19,6 @@ describe('RegisterForm', () => {
     );
     await user.click(screen.getByRole('button', { name: /送信/ }));
 
-    expect(mockOnSubmit).toBeCalledWith({ name: 'はなこ' });
+    expect(mockOnSubmit).toBeCalledWith({ name: 'たろう' });
   });
 });
