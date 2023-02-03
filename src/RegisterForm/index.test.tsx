@@ -11,6 +11,7 @@ const defaultInputValues: Inputs = {
   name: 'たろう',
   nickname: 'たろちゃん',
   birthday: '1996-06-10',
+  favorite: 'イヌ',
 };
 
 const inputAndSubmitData = async (user: User, data: PartialNull<Inputs>) => {
@@ -35,6 +36,14 @@ const inputAndSubmitData = async (user: User, data: PartialNull<Inputs>) => {
     );
   }
 
+  if (data.favorite !== null) {
+    const favorite = data.favorite || defaultInputValues.favorite;
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /好きな動物/ }),
+      favorite
+    );
+  }
+
   await user.click(screen.getByRole('button', { name: /送信/ }));
 };
 
@@ -51,12 +60,14 @@ describe('RegisterForm', () => {
       name: 'はなこ',
       nickname: 'はなちゃん',
       birthday: '2023-02-04',
+      favorite: 'ネコ',
     });
 
     expect(mockOnSubmit).toBeCalledWith({
       name: 'はなこ',
       nickname: 'はなちゃん',
       birthday: '2023-02-04',
+      favorite: 'cat',
     });
   });
 
@@ -166,6 +177,19 @@ describe('RegisterForm', () => {
           ).toBeInTheDocument();
         }
       );
+    });
+  });
+
+  describe('好きな動物のバリデーション', () => {
+    describe('必須項目ではない', () => {
+      test('入力しなくても送信できる', async () => {
+        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        const user = UserEvent.setup();
+
+        await inputAndSubmitData(user, { nickname: null });
+
+        expect(mockOnSubmit).toBeCalled();
+      });
     });
   });
 });

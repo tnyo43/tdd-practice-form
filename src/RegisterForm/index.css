@@ -23,7 +23,8 @@
   margin-left: 4px;
 }
 
-#register-form input {
+#register-form input,
+#register-form select {
   font-size: 16px;
   padding: 0.6em;
 }

@@ -5,6 +5,7 @@ export type Inputs = {
   name: string;
   nickname: string;
   birthday: string;
+  favorite: string;
 };
 
 type Props = {
@@ -68,6 +69,17 @@ export const RegisterForm: React.FC<Props> = (props) => {
               {errors.birthday.message}
             </p>
           )}
+        </div>
+        <div className="input-unit">
+          <label htmlFor="register-form--favorite" className="required">
+            好きな動物
+          </label>
+          <select id="register-form--favorite" {...register('favorite')}>
+            <option value="">---</option>
+            <option value="dog">イヌ</option>
+            <option value="cat">ネコ</option>
+            <option value="rabbit">ウサギ</option>
+          </select>
         </div>
         <div className="input-unit">
           <button type="submit">送信</button>
