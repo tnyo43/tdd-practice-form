@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import './index.css';
 
-type Inputs = {
+export type Inputs = {
   name: string;
   nickname: string;
 };
