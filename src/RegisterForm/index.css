@@ -17,9 +17,20 @@
   font-weight: 700;
 }
 
+#register-form label.required::after {
+  content: '*';
+  color: red;
+  margin-left: 4px;
+}
+
 #register-form input {
   font-size: 16px;
   padding: 0.6em;
+}
+
+#register-form p.error {
+  margin: 0;
+  color: red;
 }
 
 #register-form button {

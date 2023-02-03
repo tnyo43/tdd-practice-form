@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, getByText } from '@testing-library/react';
 import UserEvent from '@testing-library/user-event';
 import { RegisterForm } from '.';
 
@@ -20,5 +20,18 @@ describe('RegisterForm', () => {
     await user.click(screen.getByRole('button', { name: /送信/ }));
 
     expect(mockOnSubmit).toBeCalledWith({ name: 'たろう' });
+  });
+
+  test('名前を入力していないと、エラーになって送信できない', async () => {
+    render(<RegisterForm onSubmit={mockOnSubmit} />);
+    const user = UserEvent.setup();
+
+    await user.click(screen.getByRole('button', { name: /送信/ }));
+
+    expect(mockOnSubmit).not.toBeCalled();
+    const alertText = screen.getByRole('alert');
+    expect(
+      getByText(alertText, 'ユーザ名を入力してください')
+    ).toBeInTheDocument();
   });
 });
