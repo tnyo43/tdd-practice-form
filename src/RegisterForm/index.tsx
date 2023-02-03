@@ -4,6 +4,7 @@ import './index.css';
 export type Inputs = {
   name: string;
   nickname: string;
+  birthday: string;
 };
 
 type Props = {
@@ -40,6 +41,31 @@ export const RegisterForm: React.FC<Props> = (props) => {
           {errors.nickname && (
             <p role="alert" className="error">
               {errors.nickname.message}
+            </p>
+          )}
+        </div>
+        <div className="input-unit">
+          <label htmlFor="register-form--birthday" className="required">
+            生年月日
+          </label>
+          <p>YYYY-MM-DD の形式で入力してください。</p>
+          <input
+            id="register-form--birthday"
+            {...register('birthday', {
+              required: '生年月日を入力してください。',
+              validate: {
+                rightFormat: (x) =>
+                  /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(x) ||
+                  '正しい形式で入力してください。',
+                validDate: (x) =>
+                  !isNaN(new Date(x).getDate()) ||
+                  '正しい日付を入力してください。',
+              },
+            })}
+          />
+          {errors.birthday && (
+            <p role="alert" className="error">
+              {errors.birthday.message}
             </p>
           )}
         </div>

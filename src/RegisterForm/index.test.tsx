@@ -10,6 +10,7 @@ const mockOnSubmit = jest.fn();
 const defaultInputValues: Inputs = {
   name: 'たろう',
   nickname: 'たろちゃん',
+  birthday: '1996-06-10',
 };
 
 const inputAndSubmitData = async (user: User, data: PartialNull<Inputs>) => {
@@ -26,6 +27,14 @@ const inputAndSubmitData = async (user: User, data: PartialNull<Inputs>) => {
     );
   }
 
+  if (data.birthday !== null) {
+    const birthday = data.birthday || defaultInputValues.birthday;
+    await user.type(
+      screen.getByRole('textbox', { name: /生年月日/ }),
+      birthday
+    );
+  }
+
   await user.click(screen.getByRole('button', { name: /送信/ }));
 };
 
@@ -38,11 +47,16 @@ describe('RegisterForm', () => {
     render(<RegisterForm onSubmit={mockOnSubmit} />);
     const user = UserEvent.setup();
 
-    await inputAndSubmitData(user, { name: 'はなこ', nickname: 'はなちゃん' });
+    await inputAndSubmitData(user, {
+      name: 'はなこ',
+      nickname: 'はなちゃん',
+      birthday: '2023-02-04',
+    });
 
     expect(mockOnSubmit).toBeCalledWith({
       name: 'はなこ',
       nickname: 'はなちゃん',
+      birthday: '2023-02-04',
     });
   });
 
@@ -73,6 +87,85 @@ describe('RegisterForm', () => {
 
         expect(mockOnSubmit).toBeCalled();
       });
+    });
+  });
+
+  describe('生年月日のバリデーション', () => {
+    describe('必須項目', () => {
+      test('入力していないと、エラーになって送信できない', async () => {
+        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        const user = UserEvent.setup();
+
+        await inputAndSubmitData(user, { birthday: null });
+
+        expect(mockOnSubmit).not.toBeCalled();
+        const alertText = await screen.findByRole('alert');
+        expect(
+          getByText(alertText, '生年月日を入力してください。')
+        ).toBeInTheDocument();
+      });
+    });
+
+    describe('入力した値が YYYY-MM-DD のフォーマットであること', () => {
+      test.each([['1996-06-10'], ['2020-02-02'], ['1976-12-17']])(
+        'YYYY-MM-DD のフォーマットは送信できる',
+        async (dateText) => {
+          render(<RegisterForm onSubmit={mockOnSubmit} />);
+          const user = UserEvent.setup();
+
+          await inputAndSubmitData(user, { birthday: dateText });
+
+          expect(mockOnSubmit).toBeCalled();
+        }
+      );
+
+      test.each([
+        ['1996/06/10'],
+        ['2020.02.02'],
+        ['1976,12,17'],
+        ['hogehogehoge'],
+      ])('YYYY-MM-DD 以外のフォーマットは送信できない', async (dateText) => {
+        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        const user = UserEvent.setup();
+
+        await inputAndSubmitData(user, { birthday: dateText });
+
+        expect(mockOnSubmit).not.toBeCalled();
+        const alertText = await screen.findByRole('alert');
+        expect(
+          getByText(alertText, '正しい形式で入力してください。')
+        ).toBeInTheDocument();
+      });
+    });
+
+    describe('入力した値が正常な日付であること', () => {
+      test.each([['1996-08-31'], ['2020-02-29'], ['1976-12-17']])(
+        '正常な日付なら送信できる',
+        async (dateText) => {
+          render(<RegisterForm onSubmit={mockOnSubmit} />);
+          const user = UserEvent.setup();
+
+          await inputAndSubmitData(user, { birthday: dateText });
+
+          expect(mockOnSubmit).toBeCalled();
+        }
+      );
+
+      test.each([['1996-08-32'], ['1976-13-17']])(
+        '正常でない日付は送信できない',
+        async (dateText) => {
+          render(<RegisterForm onSubmit={mockOnSubmit} />);
+          const user = UserEvent.setup();
+
+          await inputAndSubmitData(user, { birthday: dateText });
+
+          expect(mockOnSubmit).not.toBeCalled();
+          const alertText = await screen.findByRole('alert');
+          expect(
+            getByText(alertText, '正しい日付を入力してください。')
+          ).toBeInTheDocument();
+        }
+      );
     });
   });
 });
