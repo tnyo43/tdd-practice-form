@@ -38,18 +38,25 @@ export const RegisterForm: React.FC<Props> = (props) => {
           <input
             id="register_form-name"
             {...register('name', { required: 'ユーザ名を入力してください' })}
+            aria-invalid={!!errors.name}
+            aria-describedby="register_form-name-error"
           />
           {errors.name && (
-            <p role="alert" className="error">
+            <p id="register_form-name-error" role="alert" className="error">
               {errors.name.message}
             </p>
           )}
         </div>
         <div className="input-unit">
           <label htmlFor="register_form-nickname">ニックネーム</label>
-          <input id="register_form-nickname" {...register('nickname')} />
+          <input
+            id="register_form-nickname"
+            {...register('nickname')}
+            aria-invalid={!!errors.nickname}
+            aria-describedby="register_form-nickname-error"
+          />
           {errors.nickname && (
-            <p role="alert" className="error">
+            <p id="register_form-nickname-error" role="alert" className="error">
               {errors.nickname.message}
             </p>
           )}
@@ -71,21 +78,33 @@ export const RegisterForm: React.FC<Props> = (props) => {
                   '正しい日付を入力してください。',
               },
             })}
+            aria-invalid={!!errors.birthday}
+            aria-describedby="register_form-birthday-error"
           />
           {errors.birthday && (
-            <p role="alert" className="error">
+            <p id="register_form-birthday-error" role="alert" className="error">
               {errors.birthday.message}
             </p>
           )}
         </div>
         <div className="input-unit">
           <label htmlFor="register_form-favorite">好きな動物</label>
-          <select id="register_form-favorite" {...register('favorite')}>
+          <select
+            id="register_form-favorite"
+            {...register('favorite')}
+            aria-invalid={!!errors.favorite}
+            aria-describedby="register_form-favorite-error"
+          >
             <option value="">---</option>
             <option value="dog">イヌ</option>
             <option value="cat">ネコ</option>
             <option value="rabbit">ウサギ</option>
           </select>
+          {errors.favorite && (
+            <p id="register_form-favorite-error" role="alert" className="error">
+              {errors.favorite.message}
+            </p>
+          )}
         </div>
         <div className="input-unit">
           <button type="submit">送信</button>

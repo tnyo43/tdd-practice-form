@@ -29,6 +29,10 @@
   padding: 0.6em;
 }
 
+#register_form [aria-invalid='true'] {
+  border-color: red;
+}
+
 #register_form input:read-only {
   background-color: lightgrey;
 }
