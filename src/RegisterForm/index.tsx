@@ -32,11 +32,11 @@ export const RegisterForm: React.FC<Props> = (props) => {
 
   return (
     <form onSubmit={handleSubmit((data) => props.onSubmit(data))}>
-      <div id="register-form" className="container">
+      <div id="register_form" className="container">
         <div className="input-unit required">
-          <label htmlFor="register-form--name">ユーザ名</label>
+          <label htmlFor="register_form-name">ユーザ名</label>
           <input
-            id="register-form--name"
+            id="register_form-name"
             {...register('name', { required: 'ユーザ名を入力してください' })}
           />
           {errors.name && (
@@ -46,8 +46,8 @@ export const RegisterForm: React.FC<Props> = (props) => {
           )}
         </div>
         <div className="input-unit">
-          <label htmlFor="register-form--nickname">ニックネーム</label>
-          <input id="register-form--nickname" {...register('nickname')} />
+          <label htmlFor="register_form-nickname">ニックネーム</label>
+          <input id="register_form-nickname" {...register('nickname')} />
           {errors.nickname && (
             <p role="alert" className="error">
               {errors.nickname.message}
@@ -55,10 +55,10 @@ export const RegisterForm: React.FC<Props> = (props) => {
           )}
         </div>
         <div className="input-unit required">
-          <label htmlFor="register-form--birthday">生年月日</label>
+          <label htmlFor="register_form-birthday">生年月日</label>
           <p>YYYY-MM-DD の形式で入力してください。</p>
           <input
-            id="register-form--birthday"
+            id="register_form-birthday"
             readOnly={props.mode === 'edit'}
             {...register('birthday', {
               required: '生年月日を入力してください。',
@@ -79,8 +79,8 @@ export const RegisterForm: React.FC<Props> = (props) => {
           )}
         </div>
         <div className="input-unit">
-          <label htmlFor="register-form--favorite">好きな動物</label>
-          <select id="register-form--favorite" {...register('favorite')}>
+          <label htmlFor="register_form-favorite">好きな動物</label>
+          <select id="register_form-favorite" {...register('favorite')}>
             <option value="">---</option>
             <option value="dog">イヌ</option>
             <option value="cat">ネコ</option>

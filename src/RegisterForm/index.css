@@ -1,4 +1,4 @@
-#register-form.container {
+#register_form.container {
   padding: 16px;
 
   display: flex;
@@ -6,42 +6,42 @@
   gap: 32px;
 }
 
-#register-form .input-unit {
+#register_form .input-unit {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-#register-form label {
+#register_form label {
   font-size: 16px;
   font-weight: 700;
 }
 
-#register-form .required label::after {
+#register_form .required label::after {
   content: '*';
   color: red;
   margin-left: 4px;
 }
 
-#register-form input,
-#register-form select {
+#register_form input,
+#register_form select {
   font-size: 16px;
   padding: 0.6em;
 }
 
-#register-form input:read-only {
+#register_form input:read-only {
   background-color: lightgrey;
 }
 
-#register-form p {
+#register_form p {
   margin: 0;
 }
 
-#register-form p.error {
+#register_form p.error {
   color: red;
 }
 
-#register-form button {
+#register_form button {
   padding: 1em;
   border-radius: 2em;
   font-size: 16px;
