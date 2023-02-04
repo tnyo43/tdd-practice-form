@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { RUnion } from '../type';
 import './index.css';
 
 export type Inputs = {
@@ -10,14 +11,24 @@ export type Inputs = {
 
 type Props = {
   onSubmit: (data: Inputs) => void;
-};
+} & RUnion<
+  | {
+      mode: 'create';
+    }
+  | {
+      mode: 'edit';
+      defaultValue: Inputs;
+    }
+>;
 
 export const RegisterForm: React.FC<Props> = (props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    defaultValues: props.defaultValue,
+  });
 
   return (
     <form onSubmit={handleSubmit((data) => props.onSubmit(data))}>
@@ -52,6 +63,7 @@ export const RegisterForm: React.FC<Props> = (props) => {
           <p>YYYY-MM-DD の形式で入力してください。</p>
           <input
             id="register-form--birthday"
+            readOnly={props.mode === 'edit'}
             {...register('birthday', {
               required: '生年月日を入力してください。',
               validate: {

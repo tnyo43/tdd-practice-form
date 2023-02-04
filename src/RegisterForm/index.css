@@ -29,6 +29,10 @@
   padding: 0.6em;
 }
 
+#register-form input:read-only {
+  background-color: lightgrey;
+}
+
 #register-form p {
   margin: 0;
 }

@@ -7,21 +7,26 @@ type PartialNull<T> = { [K in keyof T]?: T[K] | null };
 
 const mockOnSubmit = jest.fn();
 
-const defaultInputValues: Inputs = {
+const defaultUserInputValues: Inputs = {
   name: 'たろう',
   nickname: 'たろちゃん',
   birthday: '1996-06-10',
   favorite: 'イヌ',
 };
 
+const defaultInputValues: Inputs = {
+  ...defaultUserInputValues,
+  favorite: 'dog',
+};
+
 const inputAndSubmitData = async (user: User, data: PartialNull<Inputs>) => {
   if (data.name !== null) {
-    const name = data.name || defaultInputValues.name;
+    const name = data.name || defaultUserInputValues.name;
     await user.type(screen.getByRole('textbox', { name: /ユーザ名/ }), name);
   }
 
   if (data.nickname !== null) {
-    const nickname = data.nickname || defaultInputValues.nickname;
+    const nickname = data.nickname || defaultUserInputValues.nickname;
     await user.type(
       screen.getByRole('textbox', { name: /ニックネーム/ }),
       nickname
@@ -29,7 +34,7 @@ const inputAndSubmitData = async (user: User, data: PartialNull<Inputs>) => {
   }
 
   if (data.birthday !== null) {
-    const birthday = data.birthday || defaultInputValues.birthday;
+    const birthday = data.birthday || defaultUserInputValues.birthday;
     await user.type(
       screen.getByRole('textbox', { name: /生年月日/ }),
       birthday
@@ -37,7 +42,7 @@ const inputAndSubmitData = async (user: User, data: PartialNull<Inputs>) => {
   }
 
   if (data.favorite !== null) {
-    const favorite = data.favorite || defaultInputValues.favorite;
+    const favorite = data.favorite || defaultUserInputValues.favorite;
     await user.selectOptions(
       screen.getByRole('combobox', { name: /好きな動物/ }),
       favorite
@@ -53,7 +58,7 @@ describe('RegisterForm', () => {
   });
 
   test('入力したデータが送信される', async () => {
-    render(<RegisterForm onSubmit={mockOnSubmit} />);
+    render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
     const user = UserEvent.setup();
 
     await inputAndSubmitData(user, {
@@ -74,7 +79,7 @@ describe('RegisterForm', () => {
   describe('ユーザ名のバリデーション', () => {
     describe('必須項目', () => {
       test('入力していないと、エラーになって送信できない', async () => {
-        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
         const user = UserEvent.setup();
 
         await inputAndSubmitData(user, { name: null });
@@ -91,7 +96,7 @@ describe('RegisterForm', () => {
   describe('ニックネームのバリデーション', () => {
     describe('必須項目ではない', () => {
       test('入力しなくても送信できる', async () => {
-        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
         const user = UserEvent.setup();
 
         await inputAndSubmitData(user, { nickname: null });
@@ -104,7 +109,7 @@ describe('RegisterForm', () => {
   describe('生年月日のバリデーション', () => {
     describe('必須項目', () => {
       test('入力していないと、エラーになって送信できない', async () => {
-        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
         const user = UserEvent.setup();
 
         await inputAndSubmitData(user, { birthday: null });
@@ -121,7 +126,7 @@ describe('RegisterForm', () => {
       test.each([['1996-06-10'], ['2020-02-02'], ['1976-12-17']])(
         'YYYY-MM-DD のフォーマットは送信できる',
         async (dateText) => {
-          render(<RegisterForm onSubmit={mockOnSubmit} />);
+          render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
           const user = UserEvent.setup();
 
           await inputAndSubmitData(user, { birthday: dateText });
@@ -136,7 +141,7 @@ describe('RegisterForm', () => {
         ['1976,12,17'],
         ['hogehogehoge'],
       ])('YYYY-MM-DD 以外のフォーマットは送信できない', async (dateText) => {
-        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
         const user = UserEvent.setup();
 
         await inputAndSubmitData(user, { birthday: dateText });
@@ -153,7 +158,7 @@ describe('RegisterForm', () => {
       test.each([['1996-08-31'], ['2020-02-29'], ['1976-12-17']])(
         '正常な日付なら送信できる',
         async (dateText) => {
-          render(<RegisterForm onSubmit={mockOnSubmit} />);
+          render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
           const user = UserEvent.setup();
 
           await inputAndSubmitData(user, { birthday: dateText });
@@ -165,7 +170,7 @@ describe('RegisterForm', () => {
       test.each([['1996-08-32'], ['1976-13-17']])(
         '正常でない日付は送信できない',
         async (dateText) => {
-          render(<RegisterForm onSubmit={mockOnSubmit} />);
+          render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
           const user = UserEvent.setup();
 
           await inputAndSubmitData(user, { birthday: dateText });
@@ -183,13 +188,37 @@ describe('RegisterForm', () => {
   describe('好きな動物のバリデーション', () => {
     describe('必須項目ではない', () => {
       test('入力しなくても送信できる', async () => {
-        render(<RegisterForm onSubmit={mockOnSubmit} />);
+        render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
         const user = UserEvent.setup();
 
         await inputAndSubmitData(user, { nickname: null });
 
         expect(mockOnSubmit).toBeCalled();
       });
+    });
+  });
+
+  describe('create モードのとき', () => {
+    test('生年月日が入力可能', async () => {
+      render(<RegisterForm mode="create" onSubmit={mockOnSubmit} />);
+      const birthdayInput = screen.getByRole('textbox', { name: /生年月日/ });
+
+      expect(birthdayInput).not.toHaveAttribute('readonly');
+    });
+  });
+
+  describe('edit モードのとき', () => {
+    test('生年月日が入力不可能', async () => {
+      render(
+        <RegisterForm
+          mode="edit"
+          defaultValue={defaultInputValues}
+          onSubmit={mockOnSubmit}
+        />
+      );
+      const birthdayInput = screen.getByRole('textbox', { name: /生年月日/ });
+
+      expect(birthdayInput).toHaveAttribute('readonly');
     });
   });
 });

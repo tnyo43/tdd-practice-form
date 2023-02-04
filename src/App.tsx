@@ -4,7 +4,7 @@ import { RegisterForm } from './RegisterForm';
 function App() {
   return (
     <div className="App">
-      <RegisterForm onSubmit={console.log} />
+      <RegisterForm mode="create" onSubmit={console.log} />
     </div>
   );
 }
