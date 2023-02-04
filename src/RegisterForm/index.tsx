@@ -33,10 +33,8 @@ export const RegisterForm: React.FC<Props> = (props) => {
   return (
     <form onSubmit={handleSubmit((data) => props.onSubmit(data))}>
       <div id="register-form" className="container">
-        <div className="input-unit">
-          <label htmlFor="register-form--name" className="required">
-            ユーザ名
-          </label>
+        <div className="input-unit required">
+          <label htmlFor="register-form--name">ユーザ名</label>
           <input
             id="register-form--name"
             {...register('name', { required: 'ユーザ名を入力してください' })}
@@ -56,10 +54,8 @@ export const RegisterForm: React.FC<Props> = (props) => {
             </p>
           )}
         </div>
-        <div className="input-unit">
-          <label htmlFor="register-form--birthday" className="required">
-            生年月日
-          </label>
+        <div className="input-unit required">
+          <label htmlFor="register-form--birthday">生年月日</label>
           <p>YYYY-MM-DD の形式で入力してください。</p>
           <input
             id="register-form--birthday"
@@ -83,9 +79,7 @@ export const RegisterForm: React.FC<Props> = (props) => {
           )}
         </div>
         <div className="input-unit">
-          <label htmlFor="register-form--favorite" className="required">
-            好きな動物
-          </label>
+          <label htmlFor="register-form--favorite">好きな動物</label>
           <select id="register-form--favorite" {...register('favorite')}>
             <option value="">---</option>
             <option value="dog">イヌ</option>

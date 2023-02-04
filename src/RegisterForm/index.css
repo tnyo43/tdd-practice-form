@@ -17,7 +17,7 @@
   font-weight: 700;
 }
 
-#register-form label.required::after {
+#register-form .required label::after {
   content: '*';
   color: red;
   margin-left: 4px;
