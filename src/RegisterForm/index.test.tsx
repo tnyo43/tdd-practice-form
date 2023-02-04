@@ -2,8 +2,7 @@ import { render, screen, getByText } from '@testing-library/react';
 import UserEvent from '@testing-library/user-event';
 import type { UserEvent as User } from '@testing-library/user-event/dist/types/setup/setup';
 import { Inputs, RegisterForm } from '.';
-
-type PartialNull<T> = { [K in keyof T]?: T[K] | null };
+import { PartialNull } from '../type';
 
 const mockOnSubmit = jest.fn();
 

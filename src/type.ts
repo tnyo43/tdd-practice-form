@@ -7,3 +7,5 @@ type ComposeRUnion<T, U = T> = T extends T
   : never;
 
 export type RUnion<T> = ComposeRUnion<T, T>;
+
+export type PartialNull<T> = { [K in keyof T]?: T[K] | null };
